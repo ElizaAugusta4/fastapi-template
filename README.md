@@ -1,27 +1,8 @@
 # Template FastAPI
 
-Este repositório é um exemplo de estrutura recomendada para projetos Python usando FastAPI. Aqui, utilizamos o `fastapi` para construir uma aplicação web e o `pytest` para rodar os testes.
-
-Para um tutorial mais detalhado, veja nosso [tutorial de FastAPI](https://code.visualstudio.com/docs/python/tutorial-fastapi).
+Este repositório é um exemplo de estrutura recomendada para projetos Python usando FastAPI. Aqui, utilizei o `fastapi` para construir uma aplicação web e o `pytest` para rodar os testes. Além disso, adicionei uma pipeline para buildar a aplicação e enviar para AWS ECR.
 
 O código deste repositório segue as diretrizes de estilo Python conforme a [PEP 8](https://peps.python.org/pep-0008/).
-
-## Como configurar
-
-Este projeto utiliza Dev Containers. Para aproveitar essa configuração, certifique-se de ter o [Docker instalado](https://www.docker.com/products/docker-desktop).
-
-Recomendamos as seguintes extensões do VS Code para facilitar o desenvolvimento:
-
-- [Dev Containers](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers)
-- [Python](https://marketplace.visualstudio.com/items?itemName=ms-python.python)
-- [Python Debugger](https://marketplace.visualstudio.com/items?itemName=ms-python.debugpy)
-- [Pylance](https://marketplace.visualstudio.com/items?itemName=ms-python.vscode-pylance) 
-
-Além das extensões, algumas configurações do VS Code são úteis para o desenvolvimento. No editor de configurações (`Ctrl+,`), procure e ative:
-
-- Python > Analysis > **Type Checking Mode**: `basic`
-- Python > Analysis > Inlay Hints: **Function Return Types**: `enable`
-- Python > Analysis > Inlay Hints: **Variable Types**: `enable`
 
 ## Como rodar o projeto
 
