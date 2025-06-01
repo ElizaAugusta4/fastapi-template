@@ -1,4 +1,4 @@
-name: Build and Deploy Docker Image
+name: Build and Push Image
 
 on:
   push:
@@ -43,17 +43,8 @@ jobs:
           REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           TAG: ${{ steps.tag-generator.outputs.image_tag }}
         run: |
-          docker build -t $REGISTRY/api-produtos:$TAG .
-          docker push $REGISTRY/api-produtos:$TAG
-          IMAGE=$(echo $REGISTRY/api-produtos:$TAG)
+          docker build -t $REGISTRY/api-python:$TAG .
+          docker push $REGISTRY/api-python:$TAG
+          IMAGE=$(echo $REGISTRY/api-python:$TAG)
           echo "image=$IMAGE" >> $GITHUB_OUTPUT
 
-      - name: Deploy to App Runner
-        uses: awslabs/amazon-app-runner-deploy@main
-        with:
-          service: api-produtos
-          image: ${{ steps.build_docker_image.outputs.image }}
-          access-role-arn: arn:aws:iam::863518435324:role/app-runner-role
-          region: us-east-2
-          cpu: 2
-          memory: 4
