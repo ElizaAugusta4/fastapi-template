@@ -1,0 +1,59 @@
+name: Build and Deploy Docker Image
+
+on:
+  push:
+    branches:
+      - feature-dockerfile
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  build:
+    name: Build and Push Image
+    runs-on: ubuntu-latest
+    outputs:
+      image-tag: ${{ steps.tag-generator.outputs.image_tag }}
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - id: tag-generator
+        name: Generate Docker Tag
+        run: |
+          SHORT_SHA=$(echo $GITHUB_SHA | cut -c1-7)
+          TAG="gh-$SHORT_SHA"
+          echo "image_tag=$TAG" >> $GITHUB_OUTPUT
+          echo "Generated TAG: $TAG"
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::863518435324:role/ecr-role
+          aws-region: us-east-2
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Build docker image
+        id: build_docker_image
+        env:
+          REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          TAG: ${{ steps.tag-generator.outputs.image_tag }}
+        run: |
+          docker build -t $REGISTRY/backend-gerenciamento-de-projetos:$TAG .
+          docker push $REGISTRY/backend-gerenciamento-de-projetos:$TAG
+          IMAGE=$(echo $REGISTRY/backend-gerenciamento-de-projetos:$TAG)
+          echo "image=$IMAGE" >> $GITHUB_OUTPUT
+
+      - name: Deploy to App Runner
+        uses: awslabs/amazon-app-runner-deploy@main
+        with:
+          service: backend-gerenciamento-de-projetos
+          image: ${{ steps.build_docker_image.outputs.image }}
+          access-role-arn: arn:aws:iam::863518435324:role/app-runner-role
+          region: us-east-2
+          cpu: 2
+          memory: 4
